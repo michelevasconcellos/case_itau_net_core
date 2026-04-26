@@ -35,3 +35,101 @@ Se a sua vaga for BACKEND não se preocupe em fazer a parte de FRONT.<br>
 Após finalizar o case, envie o link do seu github com a solução final para o gestor que o solicitou.
 
 [sqliteadmin]: <http://sqliteadmin.orbmu2k.de> 
+
+# Solução implementada
+
+## Refatorações realizadas
+
+O projeto original foi refatorado com foco em boas práticas de desenvolvimento, organização de código, manutenibilidade e maior qualidade arquitetural.
+
+Principais melhorias implementadas:
+
+- Refatoração completa da API de Fundos
+- Implementação de Repository Pattern
+- Implementção de Service Layer
+- Separação entre Entity e DTO
+- Remoção de SQL direto da Controller
+- Tratamento global de exceções com Middleware
+- Logging com ILogger
+- Validações de regras de negócio
+- Prevenção de duplicidade de Código e CNPJ
+- Validação de patrimônio negativo
+- Configuração de Swagger
+- Configuração de CORS
+- Melhoria na organização de pastas e namespaces
+
+---
+
+## Problemas corrigidos
+
+Durante o desenvolvimento foram identificados e corrigidos os seguintes problemas:
+
+### 1. Erro no GET após inclusão de novo fundo
+
+O método GET apresentava erro:
+
+Input string was not in a correct format
+
+Isso acontecia devido ao tratamento incorreto do campo PATRIMONIO, quando o valor retornava NULL.
+
+Foi corrigido com tratamento seguro para valores nulos.
+
+### 2. Erros de integridade no POST
+
+Ao cadastrar novos fundos ocorriam falhas de constraint:
+
+- UNIQUE constraint failed: FUNDO.CNPJ
+- UNIQUE constraint failed: FUNDO.CODIGO
+
+Foi implementada validação prévia para impedir duplicidade de:
+
+- Código
+- CNPJ
+
+com retorno adequado via API.
+
+---
+
+### 3. SQL Injection por concatenação de string
+
+A API original utilizava concatenação direta de SQL, o que gerava risco de falhas e vulnerabilidades.
+
+Isso foi refatorado para uso de parâmetros SQL (`Parameters.AddWithValue()`), melhorando segurança e estabilidade.
+
+---
+
+### 4. database is locked
+
+Ocorria bloqueio do SQLite devido ao mau gerenciamento de conexão.
+
+Foi corrigido com uso adequado de `using`, garantindo fechamento correto das conexões e evitando travamentos.
+
+---
+
+### 5. SQL logic error
+
+Ocorreram falhas como:
+
+- near "Tipo": syntax error
+- near "NULL": syntax error
+- database schema has changed
+
+Esses problemas foram corrigidos com:
+
+- ajuste de queries SQL
+- correção de parâmetros
+- remoção de campos indevidos no body
+- padronização das operações de update
+
+---
+
+### 6. Erro no PUT de patrimônio
+
+O endpoint:
+
+PUT /api/fundo/{codigo}/patrimonio
+
+## Como executar o projeto
+
+- Após iniciar a aplicação, acesse no navegador:
+https://localhost:{porta}/swagger
