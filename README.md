@@ -57,7 +57,18 @@ Principais melhorias implementadas:
 - Configuração de Swagger
 - Configuração de CORS
 - Melhoria na organização de pastas e namespaces
+- Retornos HTTP
 
+Foi realizada a padronização dos retornos HTTP com uso adequado de status code:
+
+- `200 OK` para sucesso
+- `201 Created` para criação
+- `400 BadRequest` para validações inválidas
+- `404 NotFound` para registros não encontrados
+- `409 Conflict` para duplicidade de dados
+- `500 InternalServerError` para falhas inesperadas
+
+- Implementação de testes unitários
 ---
 
 ## Problemas corrigidos
@@ -133,3 +144,15 @@ PUT /api/fundo/{codigo}/patrimonio
 
 - Após iniciar a aplicação, acesse no navegador:
 https://localhost:{porta}/swagger
+
+## Tecnologias utilizadas
+ASP.NET Core
+SQLite
+ADO.NET com SQLiteConnection
+Swagger
+xUnit
+Repository Pattern
+Service Layer
+Middleware global de exceções
+CORS
+ILogger
