@@ -146,13 +146,13 @@ PUT /api/fundo/{codigo}/patrimonio
 https://localhost:{porta}/swagger
 
 ## Tecnologias utilizadas
-ASP.NET Core
-SQLite
-ADO.NET com SQLiteConnection
-Swagger
-xUnit
-Repository Pattern
-Service Layer
-Middleware global de exceções
-CORS
-ILogger
+- ASP.NET Core
+- SQLite
+- ADO.NET com SQLiteConnection
+- Swagger
+- xUnit
+- Repository Pattern
+- Service Layer
+- Middleware global de exceções
+- CORS
+- ILogger
