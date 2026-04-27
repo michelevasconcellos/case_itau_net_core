@@ -8,8 +8,11 @@ namespace CaseItau.API.Repositories
 {
     public class FundoRepository : IFundoRepository
     {
+        //private readonly string _connectionString =
+        //    "Data Source=dbCaseItau.s3db";
+
         private readonly string _connectionString =
-            "Data Source=dbCaseItau.s3db";
+    @"Data Source=C:\Projeto\Case-Itau-Michele\case_itau_net_core\CaseItau.API\dbCaseItau.s3db";
 
         public IEnumerable<FundoResponse> GetAll()
         {
