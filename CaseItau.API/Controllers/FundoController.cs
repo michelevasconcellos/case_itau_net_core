@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using CaseItau.API.Domain.Entities;
 using CaseItau.API.Application.DTOs;
@@ -19,63 +20,137 @@ namespace CaseItau.API.Controllers
 
         // GET: api/fundo
         [HttpGet]
-        public ActionResult<IEnumerable<FundoResponse>> GetAll()
+        public IActionResult GetAll()
         {
-            var fundos = _fundoService.GetAll();
-            return Ok(fundos);
+            try
+            {
+                var fundos = _fundoService.GetAll();
+
+                return Ok(new
+                {
+                    success = true,
+                    data = fundos
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    success = false,
+                    message = "Erro interno ao consultar os fundos.",
+                    detail = ex.Message
+                });
+            }
         }
 
         // GET: api/fundo/FND1001
         [HttpGet("{codigo}")]
-        public ActionResult<FundoResponse> GetByCodigo(string codigo)
+        public IActionResult GetByCodigo(string codigo)
         {
-            var fundo = _fundoService.GetByCodigo(codigo);
-
-            if (fundo == null)
+            try
             {
-                return NotFound(new
+                var fundo = _fundoService.GetByCodigo(codigo);
+
+                if (fundo == null)
                 {
-                    message = "Fundo não encontrado."
+                    return NotFound(new
+                    {
+                        success = false,
+                        message = "Fundo não encontrado."
+                    });
+                }
+
+                return Ok(new
+                {
+                    success = true,
+                    data = fundo
                 });
             }
-
-            return Ok(fundo);
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    success = false,
+                    message = "Erro interno ao consultar o fundo.",
+                    detail = ex.Message
+                });
+            }
         }
 
         // POST: api/fundo
         [HttpPost]
         public IActionResult Post([FromBody] Fundo value)
         {
-            _fundoService.Add(value);
+            try
+            {
+                _fundoService.Add(value);
 
-            return CreatedAtAction(
-                nameof(GetByCodigo),
-                new { codigo = value.Codigo },
-                value);
+                return CreatedAtAction(
+                    nameof(GetByCodigo),
+                    new { codigo = value.Codigo },
+                    new
+                    {
+                        success = true,
+                        message = "Fundo cadastrado com sucesso.",
+                        data = value
+                    });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = ex.Message
+                });
+            }
         }
 
         // PUT: api/fundo/FND1001
         [HttpPut("{codigo}")]
         public IActionResult Put(string codigo, [FromBody] Fundo value)
         {
-            _fundoService.Update(codigo, value);
-
-            return Ok(new
+            try
             {
-                message = "Fundo atualizado com sucesso."
-            });
+                _fundoService.Update(codigo, value);
+
+                return Ok(new
+                {
+                    success = true,
+                    message = "Fundo atualizado com sucesso."
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = ex.Message
+                });
+            }
         }
 
         // DELETE: api/fundo/FND1001
         [HttpDelete("{codigo}")]
         public IActionResult Delete(string codigo)
         {
-            _fundoService.Delete(codigo);
-
-            return Ok(new
+            try
             {
-                message = "Fundo removido com sucesso."
-            });
+                _fundoService.Delete(codigo);
+
+                return Ok(new
+                {
+                    success = true,
+                    message = "Fundo removido com sucesso."
+                });
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new
+                {
+                    success = false,
+                    message = ex.Message
+                });
+            }
         }
 
         // PUT: api/fundo/FND1001/patrimonio
@@ -84,12 +159,24 @@ namespace CaseItau.API.Controllers
             string codigo,
             [FromBody] decimal value)
         {
-            _fundoService.UpdatePatrimonio(codigo, value);
-
-            return Ok(new
+            try
             {
-                message = "Patrimônio atualizado com sucesso."
-            });
+                _fundoService.UpdatePatrimonio(codigo, value);
+
+                return Ok(new
+                {
+                    success = true,
+                    message = "Patrimônio atualizado com sucesso."
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = ex.Message
+                });
+            }
         }
     }
 }
